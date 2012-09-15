@@ -7,38 +7,14 @@ import argparse, sys
 '''
 
 
-def calculator(args):
-    if args.print_switch:
-    #print eval(args.str0)
-        print 'asdfads'
-        if args.str0:
-            print args.str0
-        else:
-            print 'baha'
-#return eval(args.str0)
-
-if len(sys.argv)==2:
-    print sys.argv[:]
-
-parser = argparse.ArgumentParser(description='CalCalc Parser')
-   
-parser.add_argument('-p', action='store_true', default=True,
-                    dest='print_switch',
-                    help='Print the output to the screen')
-
-parser.add_argument('-s', action='store', dest='str0',
-                    help='Specify the expression to evaluate')
-
-    #parser.add_argument('-s', action='store', dest='str0',
-    #                help='Specify the expression to evaluate',
-#                default='(Enter a String)')
-
-
-inputs = parser.parse_args()
-
-calculator(inputs)
-
-
+def calculator(in0, return_float = False):
+    try:
+        if return_float:
+            return float(eval(in0))
+        
+        return eval(in0)
+    except:
+        return 'invalid inputttt'
 
 
 
@@ -60,9 +36,34 @@ def test_4():
 
 
 if __name__ == "__main__":
-    import sys
-    print 'main'
-        #if len(sys.argv)>1:
-    #calculator((sys.argv[1]))
-        #else:
-#calculator(inputs)
+    
+    parser = argparse.ArgumentParser(description='CalCalc Parser')
+
+    parser.add_argument('tagless', nargs='?')
+    
+    
+    parser.add_argument('-s', action='store', dest='str0',
+                        help='Specify the expression to evaluate')
+
+    
+    parser.add_argument('-fl', action='store_true', default=False,
+                        dest='return_float',
+                        help='Return the value as a float')
+    comm = '''
+    parser.add_argument('-p', action='store_true', default=False,
+                        dest='print_switch',
+                        help='Print the output to the screen')
+           '''
+
+
+    args = parser.parse_args()
+    
+    # Has user indicated -s?
+    if args.str0:
+        out = calculator(args.str0, args.return_float)
+    else:
+        print 'tagless'
+        out = calculator(args.tagless, args.return_float)
+    
+    print out
+
