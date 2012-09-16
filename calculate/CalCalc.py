@@ -1,10 +1,32 @@
+#/usr/bin/env python
+
 import argparse, sys, urllib, urllib2
 from xml.etree import ElementTree as etree
 '''
-    DO SHiT
+calculate() evaluates any string passed to it, and can be used
+from either the command line (using argparse with reasonable flags)
+or imported within Python.
+
+calculate(in0, return_float = False):
+    -in0 : a string that is to be calculated
+    -return_float : return a float instead of a string, if possible
+
+Tags:
+    -s   : denotes a string input
+    -fl  : indicates that a float will be returned, if possible  
+
+sample usage:
+    $ python CalCalc.py "mass of the moon in kg"
+    $  7.3459e+22
+    ---- AND, from within Python ----
+    >>> from CalCalc import calculate
+    >>> calculate("mass of the moon in kg",  return_float=True) * 10
+    >>> 7.3459e+23
 '''
 
 # Credit to http://advencode.wordpress.com/2011/10/17/simple-query-request-with-wolfram-api/
+# _get_xml() and _xmlparser from the site above 
+# were used to parse data returned from a query to W|A
 
 def _get_xml(ip):
 
@@ -52,7 +74,8 @@ def calculate(in0, return_float = False):
                 return s
         
             # Remove units by searching for first space
-            s=s[:s.find(' ')]
+            if s.find(' ') > -1:
+                s=s[:s.find(' ')]
 
             # Check for scientific notation
             if not s.find('10^') == -1:
@@ -73,13 +96,13 @@ def test_1():
             calculate('[0,0,0]+[1,2,3]')) == True
 
 def test_2():
-    assert abs(4. - calculate('2**2')) < .001
+    assert abs(17. - calculate('2+3*len("hello")')) < .001
 
 def test_3():
-    assert abs(4. - calculate('2**2')) < .001
+    assert abs(-1. - calculate('cosine(pi)',return_float=True)) < .001
 
 def test_4():
-    assert abs(4. - calculate('2**2')) < .001
+    assert abs(28. - len(calculate('average lifespan'))) < .001
 
 
 if __name__ == "__main__":
